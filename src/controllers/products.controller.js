@@ -1,6 +1,7 @@
 const productsModel = require("../models/products.model");
 const upload = require("../lib/upload");
 const multer = require("multer");
+const process = require("node:process");
 
 /**
  * GET /products
@@ -187,7 +188,7 @@ function uploadProductImage(req, res) {
     }
 
     const updatedProduct = productsModel.updateProductById(parseInt(id), {
-      image: req.file.filename,
+      image: process.env.BASE_UPLOAD_URL + req.file.filename,
     });
     res.json({
       success: true,
