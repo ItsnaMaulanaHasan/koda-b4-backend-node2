@@ -71,6 +71,7 @@ function addProduct(req, res) {
  * @param {string} name.form - This is the name of product - application/x-www-form-urlencoded
  * @param {number} price.form.optional - This is the price of product - application/x-www-form-urlencoded
  * @return {object} 200 - product updated successfully
+ * @return {object} 404 - product not found
  */
 function updateProduct(req, res) {
   const { id } = req.params;
@@ -97,6 +98,7 @@ function updateProduct(req, res) {
  * @tags products
  * @param {number} id.path - id product to delete
  * @return {object} 200 - product updated successfully
+ * @return {object} 404 - product not found
  */
 function deleteProduct(req, res) {
   const { id } = req.params;
