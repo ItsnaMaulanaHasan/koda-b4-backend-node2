@@ -1,7 +1,7 @@
 const productsModel = require("../models/products.model");
 
 function listProducts(req, res) {
-  const { search } = req.query;
+  const { search = "" } = req.query;
   const listProducts = productsModel.getListProducts(search);
 
   res.json({
@@ -15,7 +15,7 @@ function detailProduct(req, res) {
   const { id } = req.params;
   const product = productsModel.getProductsById(parseInt(id));
 
-  if (product) {
+  if (!product) {
     res.status(404).json({
       success: false,
       message: "Product not found",

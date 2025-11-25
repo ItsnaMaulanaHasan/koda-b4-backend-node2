@@ -84,8 +84,8 @@ function getProductsById(id) {
 }
 
 function addDataProduct(data) {
-  data.id = products.length + 1;
-  products = products.push(data);
+  data = { data, id: products.length + 1 };
+  products.push(data);
 }
 
 function updateProductById(id, body) {
