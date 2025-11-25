@@ -1,4 +1,4 @@
-const authModel = require("../models/auth.model");
+const authModel = require("../models/users.model");
 
 function login(req, res) {
   const { email, password } = req.body;
