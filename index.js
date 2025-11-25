@@ -1,10 +1,13 @@
 const express = require("express");
 const router = require("./src/routers");
+const initDocs = require("./src/lib/docs");
 
 const app = express();
 
-app.use(express.json());
+initDocs(app);
+
 app.use(express.urlencoded());
+app.use(express.json());
 
 app.use("/", router);
 
