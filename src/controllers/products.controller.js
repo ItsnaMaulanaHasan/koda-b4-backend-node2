@@ -4,12 +4,18 @@ const productsModel = require("../models/products.model");
  * GET /products
  * @summary Get list all of products
  * @tags products
- * @param {string} search.query - search by name of product
+ * @param {string} search.query   - search by name of product
+ * @param {string} sortname.query - sort by name of product - enum:asc,desc
+ * @param {string} sortprice.query - sort by price of product - enum: asc,desc
  * @return {object} 200 - success get list all of products
  */
 function listProducts(req, res) {
-  const { search = "" } = req.query;
-  const listProducts = productsModel.getListProducts(search);
+  const { search = "", sortname = "", sortprice = "" } = req.query;
+  const listProducts = productsModel.getListProducts(
+    search,
+    sortname,
+    sortprice
+  );
 
   res.json({
     success: true,

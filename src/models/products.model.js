@@ -71,12 +71,28 @@ let products = [
   },
 ];
 
-function getListProducts(name) {
-  const result = products.filter((product) =>
-    product.name.toLowerCase().includes(name.toLowerCase())
+function getListProducts(search, sortname, sortprice) {
+  const results = products.filter((product) =>
+    product.name.toLowerCase().includes(search.toLowerCase())
   );
 
-  return result;
+  if (sortname && sortname === "asc") {
+    results.sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  if (sortname && sortname === "desc") {
+    results.sort((a, b) => b.name.localeCompare(a.name));
+  }
+
+  if (sortprice && sortprice === "asc") {
+    results.sort((a, b) => a.price - b.price);
+  }
+
+  if (sortprice && sortprice === "desc") {
+    results.sort((a, b) => b.price - a.price);
+  }
+
+  return results;
 }
 
 function getProductsById(id) {
