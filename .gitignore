@@ -1,4 +1,5 @@
 /uploads
+dev.db
 # Logs
 logs
 *.log
