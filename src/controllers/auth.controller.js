@@ -49,7 +49,7 @@ export async function login(req, res) {
     }
 
     const token = jwt.sign({ id: user.id }, process.env.APP_SECRET, {
-      expiresIn: 15 * 60 * 60,
+      expiresIn: 15 * 60 * 1000,
     });
 
     res.json({
