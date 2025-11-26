@@ -1,15 +1,10 @@
 import express from "express";
-import { body } from "express-validator";
 import { login, register } from "../controllers/auth.controller.js";
+import { loginSchema, registerSchema } from "../validators/auth.validator.js";
 
 const router = express();
 
-router.post("/auth/login", login);
-router.post(
-  "/auth/register",
-  body(["email", "password"], "Field is required").notEmpty(),
-  body("email", "Is not valid format").isEmail(),
-  register
-);
+router.post("/auth/login", loginSchema, login);
+router.post("/auth/register", registerSchema, register);
 
 export default router;
