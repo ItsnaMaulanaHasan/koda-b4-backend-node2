@@ -10,40 +10,52 @@ import { addUser, getUserByEmail } from "../models/users.model.js";
  * @return {object} 200 - login success
  * @return {object} 401 - wrong email or password
  */
-export function login(req, res) {
-  const result = validationResult(req);
-  if (!result.isEmpty()) {
-    res.json({
-      success: false,
-      message: "Error validation",
-      results: result.array(),
-    });
-    return;
-  }
-  const { email, password } = req.body;
-  const data = getUserByEmail(email);
-  console.log(data);
+export async function login(req, res) {
+  try {
+    const result = validationResult(req);
 
-  if (!data) {
-    res.status(400).json({
-      success: false,
-      message: "Wrong email or password",
-    });
-    return;
-  }
+    if (!result.isEmpty()) {
+      return res.status(400).json({
+        success: false,
+        message: "Error validation",
+        results: result.array(),
+      });
+    }
 
-  if (email !== data.email && password !== password) {
-    res.status(401).json({
-      success: false,
-      message: "Wrong email or password",
-    });
-    return;
-  }
+    const { email, password } = req.body;
 
-  res.json({
-    success: true,
-    message: "Login success",
-  });
+    const user = await getUserByEmail(email);
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "Wrong email or password",
+      });
+    }
+
+    if (password !== user.password) {
+      return res.status(401).json({
+        success: false,
+        message: "Wrong email or password",
+      });
+    }
+
+    return res.json({
+      success: true,
+      message: "Login success",
+      results: {
+        id: user.id,
+        fullName: user.fullName,
+        email: user.email,
+      },
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: "Login failed",
+      error: err.message,
+    });
+  }
 }
 
 /**
@@ -55,12 +67,32 @@ export function login(req, res) {
  * @param  {string} password.form.required - Password of user - application/x-www-form-urlencoded
  * @return {object} 200 - login success
  */
-export function register(req, res) {
-  const data = req.body;
-  addUser(data);
+export async function register(req, res) {
+  try {
+    const result = validationResult(req);
 
-  res.json({
-    success: true,
-    message: "Register success",
-  });
+    if (!result.isEmpty()) {
+      return res.status(400).json({
+        success: false,
+        message: "Error validation",
+        results: result.array(),
+      });
+    }
+
+    const data = req.body;
+
+    const user = await addUser(data);
+
+    return res.json({
+      success: true,
+      message: "Register success",
+      results: user,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: "Register failed",
+      error: err.message,
+    });
+  }
 }
