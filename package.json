@@ -15,6 +15,7 @@
   "dependencies": {
     "@prisma/adapter-better-sqlite3": "^7.0.1",
     "@prisma/client": "^7.0.1",
+    "argon2": "^0.44.0",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "express-jsdoc-swagger": "^1.8.0",
