@@ -1,3 +1,4 @@
+import { hashPassword } from "../lib/hashPasswordArgon2.js";
 import { prisma } from "../lib/prisma.js";
 // let users = [
 //   {
@@ -40,11 +41,12 @@ import { prisma } from "../lib/prisma.js";
 
 export async function addUser(data) {
   try {
+    const hashed = await hashPassword(data.password);
     const result = await prisma.user.create({
       data: {
         fullName: data.fullName,
         email: data.email,
-        password: data.password,
+        password: hashed,
       },
     });
     return result;

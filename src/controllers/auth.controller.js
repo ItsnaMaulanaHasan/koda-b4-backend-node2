@@ -1,4 +1,5 @@
 import { validationResult } from "express-validator";
+import { verifyPassword } from "../lib/hashPasswordArgon2.js";
 import { addUser, getUserByEmail } from "../models/users.model.js";
 
 /**
@@ -15,11 +16,12 @@ export async function login(req, res) {
     const result = validationResult(req);
 
     if (!result.isEmpty()) {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
         message: "Error validation",
         results: result.array(),
       });
+      return;
     }
 
     const { email, password } = req.body;
@@ -27,20 +29,24 @@ export async function login(req, res) {
     const user = await getUserByEmail(email);
 
     if (!user) {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
         message: "Wrong email or password",
       });
+      return;
     }
 
-    if (password !== user.password) {
-      return res.status(401).json({
+    const isValidPassword = await verifyPassword(user.password, password);
+
+    if (!isValidPassword) {
+      res.status(401).json({
         success: false,
         message: "Wrong email or password",
       });
+      return;
     }
 
-    return res.json({
+    res.json({
       success: true,
       message: "Login success",
       results: {
@@ -50,11 +56,12 @@ export async function login(req, res) {
       },
     });
   } catch (err) {
-    return res.status(500).json({
+    res.status(500).json({
       success: false,
       message: "Login failed",
       error: err.message,
     });
+    return;
   }
 }
 
@@ -72,27 +79,29 @@ export async function register(req, res) {
     const result = validationResult(req);
 
     if (!result.isEmpty()) {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
         message: "Error validation",
         results: result.array(),
       });
+      return;
     }
 
     const data = req.body;
 
     const user = await addUser(data);
 
-    return res.json({
+    res.json({
       success: true,
       message: "Register success",
       results: user,
     });
   } catch (err) {
-    return res.status(500).json({
+    res.status(500).json({
       success: false,
       message: "Register failed",
       error: err.message,
     });
+    return;
   }
 }
