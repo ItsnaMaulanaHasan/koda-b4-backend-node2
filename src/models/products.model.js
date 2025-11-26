@@ -1,4 +1,4 @@
-import { prisma } from "../lib/prisma";
+import { prisma } from "../lib/prisma.js";
 
 // let products = [
 //   {
@@ -92,8 +92,7 @@ export async function getTotalDataProducts(search) {
     return await prisma.product.count({
       where: {
         name: {
-          contains: search,
-          mode: "insensitive",
+          contains: search || "",
         },
       },
     });
@@ -125,8 +124,7 @@ export async function getListProducts(
     const results = await prisma.product.findMany({
       where: {
         name: {
-          contains: search,
-          mode: "insensitive",
+          contains: search || "",
         },
       },
       orderBy,
@@ -197,7 +195,7 @@ export async function deleteProductById(id) {
     return true;
   } catch (err) {
     if (err.code === "P2025") {
-      return false; // ID tidak ditemukan
+      return false;
     }
 
     console.error("Error while delete product:", err);
