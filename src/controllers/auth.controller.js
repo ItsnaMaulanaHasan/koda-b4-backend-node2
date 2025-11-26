@@ -1,4 +1,6 @@
 import { validationResult } from "express-validator";
+import jwt from "jsonwebtoken";
+import process from "process";
 import { verifyPassword } from "../lib/hashPasswordArgon2.js";
 import { addUser, getUserByEmail } from "../models/users.model.js";
 
@@ -46,13 +48,15 @@ export async function login(req, res) {
       return;
     }
 
+    const token = jwt.sign({ id: user.id }, process.env.APP_SECRET, {
+      expiresIn: 15 * 60 * 60,
+    });
+
     res.json({
       success: true,
       message: "Login success",
       results: {
-        id: user.id,
-        fullName: user.fullName,
-        email: user.email,
+        token,
       },
     });
   } catch (err) {
