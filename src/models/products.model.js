@@ -141,7 +141,7 @@ export async function getListProducts(
 
 export async function getProductsById(id) {
   try {
-    const result = await prisma.product.findUnique({
+    const result = await prisma.product.findFirst({
       where: { id: id },
     });
 
